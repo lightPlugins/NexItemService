@@ -204,6 +204,70 @@ public static boolean isBlade(ItemService items, ItemStack stack) {
 }
 ```
 
+### FastItemStack (Patch existing ItemStacks)
+`FastItemStack` is a lightweight wrapper around an existing `ItemStack` that lets you apply common modifications (PDC markers, DataComponents, lore templating, attributes, tooltip hiding, etc.) using a fluent API.
+Use it when you already have an `ItemStack` (e.g. inventory buttons, event items, crafting results) and want to “patch” it quickly without touching `ItemMeta`.
+
+```java
+public final class FastItemStackExample {
+
+  public static ItemStack patchExistingItem(ItemService items, Player player, ItemStack existing) {
+    // Keys used for identifying the item via PersistentDataContainer (PDC)
+    NamespacedKey markerKey = items.key("marker");
+    NamespacedKey itemIdKey = items.key("item_id");
+
+    // TagResolver used by NexLoreBuilder to resolve placeholders when building lore lines
+    TagResolver loreResolver = TagResolver.resolver(
+        Placeholder.unparsed("player", player.getName()),
+        Placeholder.unparsed("id", "menu_button")
+    );
+
+    // Wrap an existing ItemStack to patch it quickly (no ItemMeta usage, DataComponents + PDC)
+    FastItemStack fast = items.fast(existing);
+
+    fast
+        // Make sure the item is uniquely identifiable
+        .mark(markerKey)
+        .pdcString(itemIdKey, "menu_button")
+
+        // Set a custom display name (DataComponent: CUSTOM_NAME)
+        .name(Component.text("Profile"))
+
+        // Update lore using the lore DSL (MiniMessage + legacy & codes are parsed on build())
+        .lore(l -> l
+            .tagResolver(loreResolver)
+            .line("&7Click to open your profile")
+            .line("&8Owner: &f<player>")
+            .line("&8ID: &f<id>")
+        )
+
+        // Make it unbreakable and hide unbreakable tooltip (DataComponent: UNBREAKABLE + TOOLTIP_DISPLAY)
+        .unbreakable(true)
+        .flags(ItemFlag.HIDE_UNBREAKABLE)
+
+        // Add enchantments (note: current implementation overwrites ENCHANTMENTS component)
+        .enchant(Enchantment.UNBREAKING, 1)
+        .hideEnchants(true)
+
+        // Add attributes and hide them in tooltip
+        .attribute(Attribute.ATTACK_DAMAGE, 1.0, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.MAINHAND)
+        .flags(ItemFlag.HIDE_ATTRIBUTES)
+
+        // Ensure the amount is valid for custom stack sizes
+        .maxStackSize(1)
+        .amount(1)
+
+        // Optional: last-mile mutation hook for anything not covered by the fluent API
+        .edit(stack -> {
+          // Custom tweaks if you need them
+        });
+
+    // getItemStack() finalizes any pending changes (apply()) and returns the same underlying stack reference
+    return fast.getItemStack();
+  }
+}
+```
+
 ---
 
 ## ⚠️ Notes
