@@ -9,11 +9,11 @@ import java.util.Objects;
 /**
  * Default implementation.
  */
-public final class NexItemServiceImpl implements NexItemService {
+public final class DefaultItemService implements ItemService {
 
   private final Plugin plugin;
 
-  public NexItemServiceImpl(Plugin plugin) {
+  public DefaultItemService(Plugin plugin) {
     this.plugin = Objects.requireNonNull(plugin, "plugin must not be null");
   }
 
