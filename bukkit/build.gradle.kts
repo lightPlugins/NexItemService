@@ -8,9 +8,8 @@ group = "io.nexstudios.itemservice"
 version = providers.gradleProperty("serviceVersion").get()
 
 dependencies {
-    api(project(":common"))
-
     paperweight.paperDevBundle(providers.gradleProperty("paperVersion").get())
+    api("com.github.lightplugins:NexServiceRegistry:${providers.gradleProperty("registryVersion").get()}")
 
     testImplementation(platform("org.junit:junit-bom:5.10.2"))
     testImplementation("org.junit.jupiter:junit-jupiter")
