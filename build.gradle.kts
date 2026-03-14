@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "io.nexstudios.itemservice"
-version = "1.0-SNAPSHOT"
+version = providers.gradleProperty("serviceVersion").get()
 
 allprojects {
     repositories {
@@ -36,4 +36,10 @@ subprojects {
         options.encoding = "UTF-8"
         options.release.set(21)
     }
+}
+
+tasks.named("publishToMavenLocal") {
+    dependsOn(
+        project(":bukkit").tasks.named("publishToMavenLocal")
+    )
 }
