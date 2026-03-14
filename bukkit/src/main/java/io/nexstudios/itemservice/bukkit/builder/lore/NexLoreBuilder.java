@@ -1,6 +1,7 @@
 package io.nexstudios.itemservice.bukkit.builder.lore;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
@@ -8,7 +9,6 @@ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 public final class NexLoreBuilder {
@@ -102,7 +102,7 @@ public final class NexLoreBuilder {
   private Component renderEntry(Entry e) {
     return switch (e) {
       case Entry.Raw raw -> raw.component();
-      case Entry.Template t -> MINI.deserialize(t.miniMessage(), resolver);
+      case Entry.Template t -> MINI.deserialize(t.miniMessage(), resolver).decoration(TextDecoration.ITALIC, false);
     };
   }
 

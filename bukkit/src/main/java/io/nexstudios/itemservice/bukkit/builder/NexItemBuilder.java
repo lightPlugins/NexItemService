@@ -3,6 +3,7 @@ package io.nexstudios.itemservice.bukkit.builder;
 import io.nexstudios.itemservice.bukkit.builder.lore.NexLoreBuilder;
 import io.nexstudios.itemservice.bukkit.fast.FastItemStack;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -47,7 +48,7 @@ public final class NexItemBuilder {
   }
 
   public NexItemBuilder name(Component name) {
-    fast.name(name);
+    fast.name(name.decoration(TextDecoration.ITALIC, false));
     return this;
   }
 
