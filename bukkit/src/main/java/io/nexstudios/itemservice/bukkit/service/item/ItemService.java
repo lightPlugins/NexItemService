@@ -24,6 +24,10 @@ public interface ItemService extends Service {
 
   NexItemBuilder builder(Material material);
 
+  default NexItemBuilder builder(ItemStack stack) {
+    return new NexItemBuilder(plugin(), stack);
+  }
+
   default FastItemStack fast(ItemStack stack) {
     return FastItemStack.wrap(plugin(), stack);
   }

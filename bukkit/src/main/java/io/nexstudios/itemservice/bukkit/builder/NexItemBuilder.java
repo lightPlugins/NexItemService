@@ -12,19 +12,29 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public final class NexItemBuilder {
 
+  private final Plugin plugin;
   private final FastItemStack fast;
 
   public NexItemBuilder(Plugin plugin, Material material) {
-    Objects.requireNonNull(plugin, "plugin must not be null");
-    Objects.requireNonNull(material, "material must not be null");
-    this.fast = FastItemStack.wrap(plugin, ItemStack.of(material));
+    this(plugin, ItemStack.of(Objects.requireNonNull(material, "material must not be null")));
+  }
+
+  public NexItemBuilder(Plugin plugin, ItemStack stack) {
+    this.plugin = Objects.requireNonNull(plugin, "plugin must not be null");
+    this.fast = FastItemStack.wrap(this.plugin, Objects.requireNonNull(stack, "stack must not be null"));
+  }
+
+  public NexItemBuilder of(ItemStack stack) {
+    return new NexItemBuilder(plugin, stack);
   }
 
   public NexItemBuilder amount(int amount) {
