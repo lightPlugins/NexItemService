@@ -12,11 +12,9 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public final class NexItemBuilder {
