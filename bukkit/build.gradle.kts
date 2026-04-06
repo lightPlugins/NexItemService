@@ -1,7 +1,7 @@
 plugins {
     id("java-library")
     id("maven-publish")
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.19"
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.21"
 }
 
 group = "io.nexstudios.itemservice"
@@ -10,6 +10,8 @@ version = providers.gradleProperty("serviceVersion").get()
 dependencies {
     paperweight.paperDevBundle(providers.gradleProperty("paperVersion").get())
     api("com.github.lightplugins:NexServiceRegistry:${providers.gradleProperty("registryVersion").get()}")
+    compileOnly("net.kyori:adventure-text-serializer-ansi:4.26.1")
+
 
     testImplementation(platform("org.junit:junit-bom:5.10.2"))
     testImplementation("org.junit.jupiter:junit-jupiter")
