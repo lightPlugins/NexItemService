@@ -4,6 +4,8 @@ import io.nexstudios.itemservice.bukkit.builder.lore.NexLoreBuilder;
 import io.nexstudios.itemservice.bukkit.fast.FastItemStack;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -19,6 +21,8 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public final class NexItemBuilder {
+
+  private static final MiniMessage MINI = MiniMessage.miniMessage();
 
   private final Plugin plugin;
   private final FastItemStack fast;
@@ -64,6 +68,17 @@ public final class NexItemBuilder {
   public NexItemBuilder name(Component name) {
     fast.name(name.decoration(TextDecoration.ITALIC, false));
     return this;
+  }
+
+  public NexItemBuilder name(String miniMessage) {
+    Objects.requireNonNull(miniMessage, "miniMessage must not be null");
+    return name(MINI.deserialize(miniMessage));
+  }
+
+  public NexItemBuilder name(String miniMessage, TagResolver resolver) {
+    Objects.requireNonNull(miniMessage, "miniMessage must not be null");
+    Objects.requireNonNull(resolver, "resolver must not be null");
+    return name(MINI.deserialize(miniMessage, resolver));
   }
 
   public NexItemBuilder lore(Component... lines) {

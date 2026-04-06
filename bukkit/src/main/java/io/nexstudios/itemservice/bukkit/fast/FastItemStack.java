@@ -27,7 +27,10 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 
-@SuppressWarnings({"UnstableApiUsage", "UnusedReturnValue"})
+@SuppressWarnings({
+    "UnstableApiUsage",
+    "UnusedReturnValue"
+})
 public final class FastItemStack {
 
   private static final PersistentDataType<Byte, Byte> PDC_BOOL = PersistentDataType.BYTE;

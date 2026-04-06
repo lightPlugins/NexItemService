@@ -21,6 +21,7 @@ public final class NexLoreBuilder {
 
   private static final PlainTextComponentSerializer PLAIN = PlainTextComponentSerializer.plainText();
   private static final MiniMessage MINI = MiniMessage.miniMessage();
+  private static final Component BLANK_LINE = Component.text(" ");
 
   private final List<Entry> entries = new ArrayList<>();
   private TagResolver resolver = TagResolver.empty();
@@ -47,6 +48,13 @@ public final class NexLoreBuilder {
    */
   public NexLoreBuilder line(String line) {
     Objects.requireNonNull(line, "line must not be null");
+
+    // Keep explicit empty lines as real lore rows.
+    if (line.isEmpty()) {
+      entries.add(new Entry.Raw(BLANK_LINE));
+      return this;
+    }
+
     entries.add(new Entry.Template(legacyAmpersandToMiniMessage(line)));
     return this;
   }
@@ -131,7 +139,7 @@ public final class NexLoreBuilder {
     List<Component> out = new ArrayList<>(entries.size());
     for (Entry e : entries) {
       Component c = renderEntry(e);
-      out.add(c == null ? Component.empty() : c);
+      out.add(c == null ? Component.empty() : c.decoration(TextDecoration.ITALIC, false));
     }
     return List.copyOf(out);
   }
