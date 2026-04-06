@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public final class NexItemBuilder {
@@ -33,6 +34,11 @@ public final class NexItemBuilder {
 
   public NexItemBuilder of(ItemStack stack) {
     return new NexItemBuilder(plugin, stack);
+  }
+
+  public NexItemBuilder of(Optional<ItemStack> stack) {
+    Objects.requireNonNull(stack, "stack must not be null");
+    return stack.map(this::of).orElse(this);
   }
 
   public NexItemBuilder amount(int amount) {

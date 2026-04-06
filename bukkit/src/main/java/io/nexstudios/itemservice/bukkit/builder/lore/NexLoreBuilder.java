@@ -8,6 +8,7 @@ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -53,6 +54,42 @@ public final class NexLoreBuilder {
   public NexLoreBuilder lines(Component... lines) {
     Objects.requireNonNull(lines, "lines must not be null");
     Arrays.stream(lines).filter(Objects::nonNull).forEach(this::line);
+    return this;
+  }
+
+  /**
+   * Replaces all current lore entries with the provided raw components.
+   */
+  public NexLoreBuilder setLines(Component... lines) {
+    Objects.requireNonNull(lines, "lines must not be null");
+    entries.clear();
+    return lines(lines);
+  }
+
+  /**
+   * Imports already rendered lore components as raw lines.
+   */
+  public NexLoreBuilder importLines(Collection<Component> lines) {
+    Objects.requireNonNull(lines, "lines must not be null");
+    lines.stream().filter(Objects::nonNull).forEach(this::line);
+    return this;
+  }
+
+  /**
+   * Imports rendered components as templates so a resolver can be applied later.
+   */
+  public NexLoreBuilder importRenderedAsTemplates(Collection<Component> lines) {
+    Objects.requireNonNull(lines, "lines must not be null");
+
+    for (Component line : lines) {
+      if (line == null) continue;
+
+      String serialized = MINI.serialize(line)
+          .replace("\\<", "<")
+          .replace("\\>", ">");
+
+      entries.add(new Entry.Template(serialized));
+    }
     return this;
   }
 

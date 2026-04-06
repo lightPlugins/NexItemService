@@ -45,6 +45,7 @@ public final class FastItemStack {
 
   private final NexLoreBuilder loreBuilder = new NexLoreBuilder();
   private boolean hasLore = false;
+  private boolean loreSeededFromStack = false;
 
   private final List<PendingAttribute> pendingAttributes = new ArrayList<>();
   private final Set<ItemFlag> flags = EnumSet.noneOf(ItemFlag.class);
@@ -122,6 +123,7 @@ public final class FastItemStack {
 
   public FastItemStack lore(Consumer<NexLoreBuilder> editor) {
     Objects.requireNonNull(editor, "editor must not be null");
+    seedLoreFromStackIfNeeded();
     editor.accept(loreBuilder);
     hasLore = true;
     applyLoreIfPresent();
@@ -130,7 +132,8 @@ public final class FastItemStack {
 
   public FastItemStack lore(Component... lines) {
     Objects.requireNonNull(lines, "lines must not be null");
-    loreBuilder.lines(lines);
+    loreBuilder.setLines(lines);
+    loreSeededFromStack = true;
     hasLore = true;
     applyLoreIfPresent();
     return this;
@@ -273,6 +276,16 @@ public final class FastItemStack {
       lb.addLine(line == null ? Component.empty() : line);
     }
     stack.setData(DataComponentTypes.LORE, lb.build());
+  }
+
+  private void seedLoreFromStackIfNeeded() {
+    if (loreSeededFromStack) return;
+    loreSeededFromStack = true;
+
+    ItemLore existingLore = stack.getData(DataComponentTypes.LORE);
+    if (existingLore == null) return;
+
+    loreBuilder.importRenderedAsTemplates(existingLore.lines());
   }
 
   private void applyAttributesIfPresent() {
